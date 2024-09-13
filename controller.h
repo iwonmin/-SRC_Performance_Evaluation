@@ -44,6 +44,7 @@ extern Thread Thread4;
 extern Serial pc;
 extern RawSerial device;
 extern Serial ebimu;
+extern bool StartFlag;
 #pragma endregion external
 class Controller
 {
