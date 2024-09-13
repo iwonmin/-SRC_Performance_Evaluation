@@ -571,7 +571,11 @@ void Controller::WallTwerk() {
 }
 */
 void Controller::ImuDetect()  {
-    if( psd_val[1] < 15 && pitch < -IMU_THRESHOLD) {
+    if(pitch < -13.f) {
+        SetImuSafetyState(false);
+        ImuOverLift = true;
+        tilt_state = TiltState::OVER_FRONT;
+    } else if(psd_val[1] < 15 && pitch < -IMU_THRESHOLD) {
         SetImuSafetyState(false);
         ImuPitchLift = true;
         tilt_state = TiltState::FRONT;
@@ -615,6 +619,10 @@ void Controller::ImuDetect()  {
             tilt_state = TiltState::SIDE_RIGHT;
             Escape_Timer.reset();
         }
+    } else if (pitch > -4.f && ImuOverLift) {
+        SetImuSafetyState(true);
+        ImuOverLift = false;
+        tilt_state = TiltState::SAFE;
     } else if (pitch > -IMU_THRESHOLD && ImuPitchLift) { 
         SetImuSafetyState(true);
         ImuPitchLift = false;
@@ -629,6 +637,9 @@ void Controller::ImuDetect()  {
 
 void Controller::ImuEscape() {
     switch (tilt_state) {
+        case TiltState::OVER_FRONT:
+            SetSpeed(-1.0,1.0);
+            break;
         case TiltState::FRONT:
             SetSpeed(1.0,1.0);
             // if(BackCollision) WallTwerk();//벽_타기_함수(); 또는 벽_타기 State, 여유가 없다면 backcollision 대신 긴 PSD의 거리 재기
@@ -844,6 +855,9 @@ void Controller::WallViewer() {
 
 void Controller::ImuViewer() {
     switch (tilt_state) {
+        case TiltState::OVER_FRONT:
+            pc.printf("OVER_FRONT\r\n");
+            break;
         case TiltState::FRONT:
             pc.printf("FRONT\r\n");
             // pc.printf("1\r\n");

@@ -75,7 +75,7 @@ class Controller
     };
         enum class TiltState
     {
-        FRONT, FRONT_LEFT, FRONT_RIGHT, SIDE_LEFT, SIDE_RIGHT, SAFE
+        OVER_FRONT, FRONT, FRONT_LEFT, FRONT_RIGHT, SIDE_LEFT, SIDE_RIGHT, SAFE
     };
         bool StartFlag = false;
 
@@ -247,6 +247,8 @@ class Controller
     bool ImuPitchLift = false;
 
     bool ImuRollLift = false;
+
+    bool ImuOverLift = false;
 
     Timer Escape_Timer;
 
