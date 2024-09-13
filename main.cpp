@@ -24,7 +24,7 @@ int main()
             controller.Escape();
             break;
             case Controller::RoboState::YELLOW:
-            controller.Yellow();
+            controller.WallTwerk();
         }
         // pc.printf("EnemyDistance : %d, Yaw : %.1f, CenterPsd : %d, State : %d ImuState : ",controller.GetHD(),controller.GetCurrentYaw(),controller.psd_val[1], (int)controller.GetState());
         // controller.ImuViewer();

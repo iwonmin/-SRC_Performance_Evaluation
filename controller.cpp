@@ -544,32 +544,29 @@ void Controller::IrEscape() {
   } else {}
 }
 
-/*
+
 void Controller::WallTwerk() {
-    bool FinishMove = false;
-    bool Orient = false;
-    while(1) {
-        EnemyDetect();
-        if(!FinishMove) {
-            if (!Orient) {
-                if (abs(psd_val[5] - psd_val[7]) < 5) Orient = true;
-                if (psd_val[5] > psd_val[7]) SetSpeed(-0.3, 0.3);
-                if (psd_val[5] < psd_val[7]) SetSpeed(0.3,-0.3);
+    //각도 맞추기 -> 벽에 가까워지기 -> 각도 맞추기 -> 뒤로붙어서 pitch 변화
+    if(abs((int)GetCurrentYaw())%90 < 10) {
+        if((psd_val[5]+psd_val[7])/2 < 13) {
+            if(pitch < 10) {
+                SetSpeed(-0.15,-0.15);
+            } else {
+                if(Escape_Timer.read_ms() != 0) {Escape_Timer.start();}
+                if(Escape_Timer.read_ms() <= 9000) {Escape_Timer.reset(); SetState(RoboState::DETECT);}
+                SetSpeed(0,0);
+                if(GetEnemyState() && psd_val[1] < 10) {SetState(RoboState::ATTACK);}
             }
-            if (!BackCollision) { SetSpeed(-0.3); }
-            else {
-                SetSpeed(-0.1);
-                if(mpu9250.pitch < -10.0f) FinishMove = true;
-            }
+        } else {
+            SetSpeed(-0.3,-0.3);
         }
-        if(GetEnemyState()) {
-            SetState(RoboState::ATTACK);
-            return;
-        controller.ImuRefresh_MPU9250();
-        }
+    } else {
+        if(abs((int)GetCurrentYaw())%90 > 45 ) SetSpeed(-0.45, 0.45);
+        else SetSpeed(0.45,-0.45);
+
     }
 }
-*/
+
 void Controller::ImuDetect()  {
     if( psd_val[1] < 15 && pitch < -IMU_THRESHOLD) {
         SetImuSafetyState(false);
